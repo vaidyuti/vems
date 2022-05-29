@@ -1,0 +1,3 @@
+export POSTGRES_DB=vems
+export POSTGRES_USER=vems
+export POSTGRES_PASSWORD=vems
