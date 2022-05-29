@@ -1,7 +1,7 @@
 import os
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vems.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vems.settings.local")
 
 app = Celery("project")
 app.config_from_object("django.conf:settings", namespace="CELERY")
