@@ -2,17 +2,15 @@ import os
 from .env import ABS_PATH, ENV_BOOL, ENV_STR, ENV_LIST, ENV_DEC, ENV_INT
 
 import dj_database_url
+import environ
 from corsheaders.defaults import default_headers
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+env = environ.Env()
+ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
-DEBUG = "RENDER" not in os.environ
-SECRET_KEY = ENV_STR("SECRET_KEY", "secret" if DEBUG else "")
-ALLOWED_HOSTS = ENV_LIST("ALLOWED_HOSTS", ",", ["*"] if DEBUG else [])
-
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = ENV_STR("SECRET_KEY", "m=o*y!k)%p!&n^-ux_squ$ldzh$8l8jg(pd(@iu3t=+k1szz^$")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -67,13 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "vems.wsgi.application"
 
-DATABASES = {"default": dj_database_url.config()}
-DATABASES = {
-    "default": dj_database_url.config(
-        default="postgresql://vems:vems@localhost:5432/vems",
-        conn_max_age=600,
-    )
-}
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
@@ -120,13 +112,11 @@ SITE_ID = 1
 # static and media
 # if STATIC_ROOT ends with STATIC_URL, it makes nginx static serve config easy, likewise for media
 STATIC_URL = ENV_STR("STATIC_URL", "/static/")
-# Following settings only make sense on production and may break development environments.
-if not DEBUG:  # Tell Django to copy statics to the `staticfiles` directory
-    # in your application directory on Render.
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    # Turn on WhiteNoise storage backend that takes care of compressing static files
-    # and creating unique names for each version so they can safely be cached forever.
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STATIC_ROOT = os.path.join(ROOT_DIR, "staticfiles")
+# Turn on WhiteNoise storage backend that takes care of compressing static files
+# and creating unique names for each version so they can safely be cached forever.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = ENV_STR("MEDIA_URL", "/media/")
 MEDIA_ROOT = ABS_PATH(ENV_STR("MEDIA_ROOT", "media"))
