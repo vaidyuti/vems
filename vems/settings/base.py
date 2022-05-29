@@ -1,11 +1,18 @@
+import os
 from .env import ABS_PATH, ENV_BOOL, ENV_STR, ENV_LIST, ENV_DEC, ENV_INT
 
 import dj_database_url
 from corsheaders.defaults import default_headers
 
-DEBUG = ENV_BOOL("DEBUG", False)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+DEBUG = "RENDER" not in os.environ
 SECRET_KEY = ENV_STR("SECRET_KEY", "secret" if DEBUG else "")
-ALLOWED_HOSTS = ENV_LIST("ALLOWED_HOSTS", ",", ["*"] if DEBUG else [])
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -61,6 +68,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "vems.wsgi.application"
 
 DATABASES = {"default": dj_database_url.config()}
+DATABASES = {
+    "default": dj_database_url.config(
+        default="postgresql://postgres:postgres@localhost:5432/mysite",
+        conn_max_age=600,
+    )
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
@@ -107,10 +120,16 @@ SITE_ID = 1
 # static and media
 # if STATIC_ROOT ends with STATIC_URL, it makes nginx static serve config easy, likewise for media
 STATIC_URL = ENV_STR("STATIC_URL", "/static/")
-STATIC_ROOT = ENV_STR("STATIC_ROOT", ABS_PATH("static"))
+# Following settings only make sense on production and may break development environments.
+if not DEBUG:  # Tell Django to copy statics to the `staticfiles` directory
+    # in your application directory on Render.
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+    # Turn on WhiteNoise storage backend that takes care of compressing static files
+    # and creating unique names for each version so they can safely be cached forever.
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 MEDIA_URL = ENV_STR("MEDIA_URL", "/media/")
 MEDIA_ROOT = ABS_PATH(ENV_STR("MEDIA_ROOT", "media"))
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # email settings
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
