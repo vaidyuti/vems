@@ -70,7 +70,7 @@ WSGI_APPLICATION = "vems.wsgi.application"
 DATABASES = {"default": dj_database_url.config()}
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://postgres:postgres@localhost:5432/mysite",
+        default="postgresql://vems:vems@localhost:5432/vems",
         conn_max_age=600,
     )
 }
