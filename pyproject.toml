@@ -7,7 +7,7 @@ authors = ["Rithvik Nishad <rithvikn2001@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 Django = "4.0.2"
-Pillow = "9.0.1"
+Pillow = "9.1.1"
 PyYAML = "6.0"
 black = "22.3.0"
 celery = "5.2.6"
