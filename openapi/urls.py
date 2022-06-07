@@ -5,7 +5,7 @@ from rest_framework.schemas import get_schema_view
 urlpatterns = [
     path(
         "schema/",
-        get_schema_view(title="Demo project", description="API", version="1.0.0."),
+        get_schema_view(title="Vaidyuti EMS API", description="API", version="1.0.0."),
         name="openapi-schema",
     ),
     path(
