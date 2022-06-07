@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "prosumer.apps.ProsumerConfig",
     "users.apps.UsersConfig",
     "openapi.apps.OpenAPIConfig",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
