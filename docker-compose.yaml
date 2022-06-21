@@ -1,12 +1,13 @@
 version: '3.9'
-
 networks:
-  bridge:
-    name: vems
+  vaidyuti:
+    name: vaidyuti
+  vaidyuti-public:
+    name: vaidyuti-public
+    external: true
 
 services:
   emqx:
-    container_name: emqx
     image: emqx/emqx:4.4.2
     restart: always
     ports:
@@ -17,44 +18,45 @@ services:
       - 8883:8883
       - 18083:18083
     networks:
-      - bridge
+      - vaidyuti
+      - vaidyuti-public
 
   influxdb:
-    container_name: influxdb
-    image: influxdb:2.1.1
+    image: influxdb:2.3.0-alpine
     restart: always
     ports:
       - 8086:8086
     volumes:
-      - /var/lib/influxdb2
+      - ./data/influxdb2:/var/lib/influxdb2
     networks:
-      - bridge
+      - vaidyuti
 
   telegraf:
-    container_name: telegraf
     image: telegraf
     restart: always
     volumes:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     env_file:
-      - .envs/.local/.influxdb
+      - .envs/.local/.telegraf
     environment:
+      - INFLUX_ORG=Vaidyuti
+      - INFLUX_HOST=http://influxdb:8086
+      - INFLUX_BUCKET=daeg0
       - MQTT_SERVER=tcp://emqx:1883
     depends_on:
       - emqx
       - influxdb
     networks:
-      - bridge
+      - vaidyuti
 
   postgres:
-    env_file:
-      - ./.envs/.local/.postgres
-    container_name: postgres
     image: postgres
     restart: always
     ports:
       - 5432:5432
+    env_file:
+      - ./.envs/.local/.postgres
     volumes:
       - /var/lib/postgresql/data
     networks:
-      - bridge
+      - vaidyuti
