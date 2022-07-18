@@ -3,6 +3,7 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = ENV_LIST("ALLOWED_HOSTS", ",", [])
+SECRET_KEY = ENV_STR("DJANGO_SECRET_KEY", "secret" if DEBUG else "")
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

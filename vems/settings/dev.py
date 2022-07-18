@@ -3,6 +3,7 @@ from .base import *
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+SECRET_KEY = ENV_STR("DJANGO_SECRET_KEY", "secret" if DEBUG else "")
 
 DATABASES = {
     "default": dj_database_url.config(
