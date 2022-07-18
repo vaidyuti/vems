@@ -1,7 +1,12 @@
-from .env import ABS_PATH, ENV_BOOL, ENV_STR, ENV_LIST, ENV_DEC, ENV_INT
+import os
 
 import dj_database_url
+import environ
 from corsheaders.defaults import default_headers
+
+from .env import ABS_PATH, ENV_BOOL, ENV_DEC, ENV_INT, ENV_LIST, ENV_STR
+
+env = environ.Env()
 
 DEBUG = ENV_BOOL("DEBUG", False)
 SECRET_KEY = ENV_STR("SECRET_KEY", "secret" if DEBUG else "")
