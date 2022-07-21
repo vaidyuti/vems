@@ -1,7 +1,7 @@
 amqp==5.1.1
 asgiref==3.5.2
 billiard==3.6.4.0
-black==22.1.0
+black==22.6.0
 celery==5.2.3
 certifi==2022.6.15
 cffi==1.15.1
