@@ -1,1 +1,5 @@
+INFLUX_ORG=vaidyuti
+INFLUX_HOST=http://influxdb:8086
+INFLUX_BUCKET=vaidyuti-sandbox-1
+MQTT_SERVER=tcp://emqx:1883
 INFLUX_TOKEN="OogTsQW6WzmN-DgWNbYYpYYrFz1KDOuE8QmUvhy3-SZggLtuARyz-UjiJhJiHFsA-Wi5LNKzVAxZ6dq4rgh0og=="

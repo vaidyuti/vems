@@ -24,25 +24,21 @@ services:
   influxdb:
     image: influxdb:2.3.0-alpine
     restart: always
-    ports:
-      - 8086:8086
+    hostname: influxdb.sandbox-1.vaidyuti
     volumes:
       - ./data/influxdb2:/var/lib/influxdb2
+      - ./data/influxdb2_config.yaml:/etc/influxdb2/config.yml
     networks:
       - vaidyuti
 
   telegraf:
     image: telegraf
     restart: always
+    hostname: telegraf.sandbox-1.vaidyuti
     volumes:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     env_file:
       - .envs/.local/.telegraf
-    environment:
-      - INFLUX_ORG=Vaidyuti
-      - INFLUX_HOST=http://influxdb:8086
-      - INFLUX_BUCKET=daeg0
-      - MQTT_SERVER=tcp://emqx:1883
     depends_on:
       - emqx
       - influxdb
@@ -52,6 +48,7 @@ services:
   postgres:
     image: postgres
     restart: always
+    hostname: postgres.sandbox-1.vaidyuti
     env_file:
       - ./.envs/.local/.postgres
     volumes:
@@ -62,7 +59,8 @@ services:
   grafana:
     image: grafana/grafana-oss
     restart: always
-    ports:
-      - 3000:3000
+    hostname: grafana.sandbox-1.vaidyuti
     depends_on:
       - influxdb
+    networks:
+      - vaidyuti
